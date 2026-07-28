@@ -72,8 +72,6 @@ Saat pesanan dikonfirmasi, ALFAGO membuat teks pesanan terpisah untuk masing-mas
 | Grafik | Chart.js 4 |
 | Database | MySQL 8 |
 | Asset bundler | Vite 8 |
-| Web server | Nginx |
-| Lingkungan pengembangan | Docker Compose |
 | Pengujian | PHPUnit 12 |
 
 ## 🚀 Menjalankan Aplikasi
@@ -82,44 +80,77 @@ Saat pesanan dikonfirmasi, ALFAGO membuat teks pesanan terpisah untuk masing-mas
 
 Pastikan perangkat sudah memiliki:
 
-- Docker dan Docker Compose
+- PHP 8.3 atau lebih baru
+- Composer
 - Node.js dan npm
-- Image PHP lokal yang ditentukan di `.env.compose`, secara bawaan `local/laravel-php:8.4`
+- MySQL 8
+- Ekstensi PHP yang dibutuhkan Laravel, seperti `ctype`, `curl`, `dom`, `fileinfo`, `mbstring`, `openssl`, `pdo_mysql`, `tokenizer`, dan `xml`
 
-### Instalasi dengan Docker
+### Instalasi
 
-File ini berada di dalam folder `src`. Jalankan perintah berikut dari **root project**, yaitu direktori yang berisi `docker-compose.yml`:
+Clone repository, kemudian masuk ke direktori project:
 
 ```bash
-# 1. Jalankan container
-docker compose --env-file .env.compose up -d
-
-# 2. Pasang dependency PHP
-docker compose --env-file .env.compose exec app composer install
-
-# 3. Pasang dan build asset frontend
-cd src
-npm install
-npm run build
-cd ..
-
-# 4. Siapkan aplikasi dan database
-docker compose --env-file .env.compose exec app php artisan key:generate
-docker compose --env-file .env.compose exec app php artisan migrate:fresh --seed
-docker compose --env-file .env.compose exec app php artisan storage:link
+git clone <url-repository>
+cd <nama-repository>
 ```
 
-> [!WARNING]
-> Perintah `migrate:fresh --seed` akan menghapus seluruh tabel dan mengisinya kembali dengan data demo. Gunakan hanya untuk instalasi baru atau lingkungan pengembangan.
+Pasang seluruh dependency backend dan frontend:
 
-Setelah proses selesai, layanan dapat diakses melalui:
+```bash
+composer install
+npm install
+```
+
+Buat file konfigurasi aplikasi dan generate application key:
+
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+Buat database MySQL baru bernama `alfago`, kemudian sesuaikan konfigurasi database pada file `.env`:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=alfago
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+Jalankan migrasi, isi data awal, dan buat symbolic link untuk penyimpanan berkas:
+
+```bash
+php artisan migrate --seed
+php artisan storage:link
+```
+
+Build asset frontend:
+
+```bash
+npm run build
+```
+
+Terakhir, jalankan development server:
+
+```bash
+php artisan serve
+```
+
+Setelah server berjalan, aplikasi dapat diakses melalui:
 
 | Layanan | Alamat |
 |---|---|
-| Aplikasi ALFAGO | [http://localhost:8080](http://localhost:8080) |
-| Panel Admin | [http://localhost:8080/admin/dashboard](http://localhost:8080/admin/dashboard) |
-| phpMyAdmin | [http://localhost:8081](http://localhost:8081) |
-| MySQL | `localhost:33060` |
+| Aplikasi ALFAGO | [http://127.0.0.1:8000](http://127.0.0.1:8000) |
+| Panel Admin | [http://127.0.0.1:8000/admin/dashboard](http://127.0.0.1:8000/admin/dashboard) |
+
+Untuk mengembangkan tampilan dengan hot reload, jalankan Vite pada terminal terpisah:
+
+```bash
+npm run dev
+```
 
 ## 🔑 Akun Demo
 
@@ -143,16 +174,15 @@ ADMIN_PASSWORD=password
 
 ## 🧪 Pengujian
 
-Jalankan test suite dari root project:
+Jalankan test suite:
 
 ```bash
-docker compose --env-file .env.compose exec app php artisan test
+php artisan test
 ```
 
 Periksa juga proses build frontend:
 
 ```bash
-cd src
 npm run build
 ```
 
@@ -161,7 +191,7 @@ Pengujian mencakup katalog publik, autentikasi, otorisasi admin, checkout, pengu
 ## 🗂️ Struktur Direktori
 
 ```text
-src/
+.
 ├── app/
 │   ├── Enums/          # Status, peran, dan metode pembayaran
 │   ├── Http/           # Controller dan middleware
