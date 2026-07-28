@@ -4,14 +4,16 @@
     <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title ?? 'ALFAGO' }} — ALFAGO</title>
+    <link rel="icon" type="image/png" href="{{ asset('alfago_logo.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('alfago_logo.png') }}">
     @vite(['resources/css/app.css','resources/js/app.js'])
     @livewireStyles
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-900">
     <header class="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur">
         <div class="mx-auto flex max-w-7xl items-center gap-3 px-4 py-3">
-            <a href="{{ route('catalog') }}" wire:navigate class="flex shrink-0 items-center gap-2">
-                <span class="grid h-10 w-10 place-items-center rounded-xl bg-red-600 text-xl font-black text-white shadow-lg shadow-red-200">A</span>
+            <a href="{{ route('catalog') }}" wire:navigate class="flex shrink-0 items-center gap-2" aria-label="ALFAGO">
+                <img src="{{ asset('alfago_logo.png') }}" alt="Logo ALFAGO" width="40" height="40" class="h-10 w-10 object-contain">
                 <span class="hidden text-xl font-black tracking-tight text-red-600 sm:block">ALFAGO</span>
             </a>
             <div class="ml-auto flex items-center gap-2">
@@ -38,7 +40,7 @@
     </header>
     @if(session('success'))<div class="mx-auto mt-4 max-w-7xl px-4"><div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-800">{{ session('success') }}</div></div>@endif
     <main>{{ $slot }}</main>
-    <footer class="mt-16 border-t border-slate-200 bg-white"><div class="mx-auto max-w-7xl px-4 py-8 text-center text-sm text-slate-500">ALFAGO · Marketplace jastip internal sekolah</div></footer>
+    <footer class="mt-16 border-t border-slate-200 bg-white"><div class="mx-auto flex max-w-7xl items-center justify-center gap-2 px-4 py-8 text-center text-sm text-slate-500"><img src="{{ asset('alfago_logo.png') }}" alt="" width="28" height="28" class="h-7 w-7 object-contain" aria-hidden="true"><span><b class="text-slate-700">ALFAGO</b> · PM SMKN 1 Bawang</span></div></footer>
     @livewireScripts
 </body>
 </html>

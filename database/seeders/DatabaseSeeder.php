@@ -28,12 +28,14 @@ class DatabaseSeeder extends Seeder
         $admin = User::create([
             'name' => env('ADMIN_NAME', 'Admin ALFAGO'),
             'email' => env('ADMIN_EMAIL', 'admin@alfago.test'),
+            'phone' => '081234567890',
             'password' => env('ADMIN_PASSWORD', 'password'),
             'role' => UserRole::Admin,
         ]);
         $user = User::create([
             'name' => 'Budi Santoso', 'email' => 'user@alfago.test',
-            'password' => 'password', 'role' => UserRole::User, 'kelas_id' => $classes[2]->id,
+            'phone' => '081298765432', 'password' => 'password',
+            'role' => UserRole::User, 'kelas_id' => $classes[2]->id,
         ]);
 
         $toko = Vendor::create(['nama'=>'Toko Alfa Skansa','tipe'=>'toko','is_active'=>true]);

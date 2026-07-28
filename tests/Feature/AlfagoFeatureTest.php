@@ -46,8 +46,15 @@ class AlfagoFeatureTest extends TestCase
         $this->post('/register', [
             'name'=>'Siti','email'=>'siti@example.com','kelas_id'=>$data['kelas']->id,
             'password'=>'password','password_confirmation'=>'password',
+        ])->assertSessionHasErrors('phone');
+        $this->assertGuest();
+
+        $this->post('/register', [
+            'name'=>'Siti','email'=>'siti@example.com','phone'=>'081234567890','kelas_id'=>$data['kelas']->id,
+            'password'=>'password','password_confirmation'=>'password',
         ])->assertRedirect('/');
         $this->assertAuthenticated();
+        $this->assertDatabaseHas('users', ['email'=>'siti@example.com', 'phone'=>'081234567890']);
         $this->post('/logout')->assertRedirect('/');
         $this->post('/login',['email'=>'siti@example.com','password'=>'password'])->assertRedirect('/');
         $this->assertAuthenticated();
@@ -85,7 +92,7 @@ class AlfagoFeatureTest extends TestCase
     public function test_admin_can_advance_status_and_whatsapp_text_is_grouped(): void
     {
         $data = $this->masterData();
-        $user = User::factory()->create(['kelas_id'=>$data['kelas']->id]);
+        $user = User::factory()->create(['kelas_id'=>$data['kelas']->id, 'phone'=>'081234567890']);
         $admin = User::factory()->create(['role'=>UserRole::Admin]);
         app(CartService::class)->add($user, $data['product']);
         $order = app(CheckoutService::class)->create($user, $data['kelas']->id, 'cash', null);
@@ -94,6 +101,7 @@ class AlfagoFeatureTest extends TestCase
             ->call('confirm')
             ->assertSet('order.status', OrderStatus::Processing)
             ->assertSee('PKL Test')
+            ->assertSee('081234567890')
             ->assertSee('PESANAN BARU - ALFAGO');
         $this->assertNotNull($order->fresh()->confirmed_at);
     }

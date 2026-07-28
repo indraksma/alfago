@@ -3,12 +3,14 @@
 <head>
     <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}"><title>{{ $title ?? 'Admin' }} — ALFAGO</title>
+    <link rel="icon" type="image/png" href="{{ asset('alfago_logo.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('alfago_logo.png') }}">
     @vite(['resources/css/app.css','resources/js/app.js']) @livewireStyles
 </head>
 <body class="bg-slate-100 text-slate-900">
 <div class="min-h-screen lg:flex">
     <aside class="border-b bg-slate-950 text-white lg:fixed lg:inset-y-0 lg:w-64 lg:border-0">
-        <div class="flex items-center justify-between px-5 py-5"><a href="{{ route('admin.dashboard') }}" wire:navigate class="text-2xl font-black text-red-500">ALFAGO</a><span class="rounded-full bg-red-600/20 px-2 py-1 text-xs text-red-300">Admin</span></div>
+        <div class="flex items-center justify-between px-5 py-5"><a href="{{ route('admin.dashboard') }}" wire:navigate class="flex items-center gap-2" aria-label="Dashboard ALFAGO"><img src="{{ asset('alfago_logo.png') }}" alt="Logo ALFAGO" width="40" height="40" class="h-10 w-10 object-contain"><span class="text-2xl font-black text-red-500">ALFAGO</span></a><span class="rounded-full bg-red-600/20 px-2 py-1 text-xs text-red-300">Admin</span></div>
         <nav class="flex gap-1 overflow-x-auto px-3 pb-4 text-sm lg:block lg:space-y-1">
             <a class="admin-link" href="{{ route('admin.dashboard') }}" wire:navigate>Dashboard</a>
             <a class="admin-link" href="{{ route('admin.orders.index') }}" wire:navigate>Pesanan</a>

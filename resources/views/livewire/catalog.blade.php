@@ -1,12 +1,12 @@
 <div>
     <section class="mx-auto max-w-7xl px-4 pt-6">
         @if($banners->isNotEmpty())
-            <div x-data="{active:0,total:{{ $banners->count() }}}" x-init="setInterval(()=>active=(active+1)%total,5000)" class="relative aspect-[16/6] min-h-44 overflow-hidden rounded-3xl bg-slate-200 shadow-xl">
+            <div x-data="{active:0,total:{{ $banners->count() }}}" x-init="setInterval(()=>active=(active+1)%total,5000)" class="relative mx-2 min-w-0 overflow-hidden rounded-2xl bg-slate-200 shadow-xl aspect-[4/3] sm:mx-0 sm:min-h-44 sm:rounded-3xl sm:aspect-[16/6]">
                 @foreach($banners as $i=>$banner)<a href="{{ $banner->link_url ?: '#' }}" :class="active==={{$i}} ? 'z-10 opacity-100 pointer-events-auto' : 'z-0 opacity-0 pointer-events-none'" class="absolute inset-0 block transition-opacity duration-700 ease-in-out">
-                    <img class="h-full w-full object-cover opacity-75" src="{{ str_starts_with($banner->gambar,'http')?$banner->gambar:Storage::url($banner->gambar) }}" alt="{{ $banner->judul }}">
-                    @if($banner->judul)<div class="absolute inset-0 flex items-end bg-gradient-to-t from-black/70 to-transparent p-6"><h2 class="max-w-xl text-2xl font-black text-white sm:text-4xl">{{ $banner->judul }}</h2></div>@endif
+                    <img class="h-full w-full max-w-full object-cover opacity-75" src="{{ str_starts_with($banner->gambar,'http')?$banner->gambar:Storage::url($banner->gambar) }}" alt="{{ $banner->judul }}">
+                    @if($banner->judul)<div class="absolute inset-0 flex items-end bg-gradient-to-t from-black/70 to-transparent p-4 sm:p-6"><h2 class="max-w-xl text-xl font-black text-white sm:text-4xl">{{ $banner->judul }}</h2></div>@endif
                 </a>@endforeach
-                <div class="absolute bottom-3 right-4 z-20 flex gap-1">@foreach($banners as $i=>$banner)<button type="button" @click="active={{$i}}" :class="active==={{$i}}?'w-6 bg-white':'w-2 bg-white/50'" class="h-2 rounded-full transition-all"></button>@endforeach</div>
+                <div class="absolute bottom-3 right-3 z-20 flex gap-1 sm:right-4">@foreach($banners as $i=>$banner)<button type="button" @click="active={{$i}}" :class="active==={{$i}}?'w-6 bg-white':'w-2 bg-white/50'" class="h-2 rounded-full transition-all"></button>@endforeach</div>
             </div>
         @else
             <div class="rounded-3xl bg-gradient-to-br from-red-600 to-red-800 p-8 text-white"><p class="font-bold text-yellow-300">JASTIP SEKOLAH</p><h1 class="mt-2 text-3xl font-black sm:text-5xl">Pesan favoritmu,<br>antar sampai kelas.</h1></div>

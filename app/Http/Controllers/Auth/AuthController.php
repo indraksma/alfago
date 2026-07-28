@@ -28,9 +28,17 @@ class AuthController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        $request->merge([
+            'phone' => preg_replace('/[\s()-]+/', '', (string) $request->input('phone')),
+        ]);
+
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'], 'email' => ['required', 'email', 'max:255', 'unique:users'],
+            'phone' => ['required', 'string', 'max:20', 'regex:/^(?:\+62|62|0)8[1-9][0-9]{6,11}$/'],
             'kelas_id' => ['nullable', 'exists:kelas,id'], 'password' => ['required', 'confirmed', Password::min(8)],
+        ], [
+            'phone.required' => 'Nomor HP wajib diisi.',
+            'phone.regex' => 'Masukkan nomor HP Indonesia yang valid, misalnya 081234567890.',
         ]);
         $user = User::create($data);
         Auth::login($user);

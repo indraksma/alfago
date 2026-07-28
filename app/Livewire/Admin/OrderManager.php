@@ -13,7 +13,7 @@ class OrderManager extends Component {
     public function whatsappGroups():array {
         if(!$this->order)return [];
         return $this->order->items->groupBy('vendor_id')->map(function($items){
-            $vendor=$items->first()->vendor; $lines=['*PESANAN BARU - ALFAGO*','Kode: '.$this->order->kode_pesanan,'Kelas: '.$this->order->kelas->nama,'Pembayaran: '.strtoupper($this->order->metode_pembayaran->value),'','*Vendor: '.$vendor->nama.'*'];
+            $vendor=$items->first()->vendor; $lines=['*PESANAN BARU - ALFAGO*','Kode: '.$this->order->kode_pesanan,'Pemesan: '.$this->order->user->name,'Nomor HP: '.($this->order->user->phone ?: '-'),'Kelas: '.$this->order->kelas->nama,'Pembayaran: '.strtoupper($this->order->metode_pembayaran->value),'','*Vendor: '.$vendor->nama.'*'];
             foreach($items->values() as $i=>$item)$lines[]=($i+1).'. '.$item->nama_produk.' x'.$item->qty.' - Rp'.number_format((float)$item->subtotal,0,',','.');
             $lines[]='Subtotal Vendor: Rp'.number_format((float)$items->sum('subtotal'),0,',','.'); $lines[]=''; $lines[]='Catatan: '.($this->order->catatan?:'-');
             return ['vendor'=>$vendor->nama,'link'=>$vendor->whatsapp_group_link,'text'=>implode("\n",$lines)];

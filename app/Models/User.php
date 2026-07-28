@@ -16,7 +16,7 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-    protected $fillable = ['name', 'email', 'password', 'role', 'kelas_id'];
+    protected $fillable = ['name', 'email', 'phone', 'password', 'role', 'kelas_id'];
     protected $hidden = ['password', 'remember_token'];
 
     protected function casts(): array
@@ -31,4 +31,15 @@ class User extends Authenticatable
     public function cart(): HasOne { return $this->hasOne(Cart::class); }
     public function orders(): HasMany { return $this->hasMany(Order::class); }
     public function isAdmin(): bool { return $this->role === UserRole::Admin; }
+
+    public function whatsappUrl(): ?string
+    {
+        if (! $this->phone) return null;
+
+        $number = preg_replace('/\D+/', '', $this->phone);
+        if (str_starts_with($number, '0')) $number = '62'.substr($number, 1);
+        elseif (str_starts_with($number, '8')) $number = '62'.$number;
+
+        return 'https://wa.me/'.$number;
+    }
 }
